@@ -1,10 +1,33 @@
+import { dev } from "$app/env";
 import type { IStory } from "$lib/models";
 import type { RequestHandler } from "@sveltejs/kit";
 import type { RequestEvent } from "@sveltejs/kit/types/internal";
 
 const BASE_URL = "https://hacker-news.firebaseio.com/v0";
-export async function get(event: RequestEvent): Promise<ReturnType<RequestHandler>> {
 
+export async function debug_get(event: RequestEvent): Promise<ReturnType<RequestHandler>> {
+	let stories: IStory[] = [...Array(30).keys()].map(i => {
+		return {
+			by: "taylor",
+			descendants: 0,
+			id: i,
+			kids: [],
+			score: 0,
+			time: 0,
+			title: "test",
+			type: "story",
+			url: "https://test.test"
+		}
+	});
+
+	return {
+		// @ts-ignore
+		body: {
+			stories
+		}
+	}
+}
+export async function prod_get(event: RequestEvent): Promise<ReturnType<RequestHandler>> {
 	const r = await fetch(BASE_URL + "/topstories.json");
 	let story_ids: number[] = await r.json();
 	function fetch_story(id: number): Promise<IStory> {
@@ -20,6 +43,8 @@ export async function get(event: RequestEvent): Promise<ReturnType<RequestHandle
 	}
 
 }
+
+export const get = dev ? debug_get : prod_get;
 /*
 {
   "by" : "dhouston",
