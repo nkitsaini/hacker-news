@@ -4,7 +4,11 @@
 // for information about these interfaces
 declare namespace App {
 	// interface Locals {}
-	// interface Platform {}
+	interface Platform {
+		env: {
+			HN_KV: KVNamespace
+		}
+	}
 	// interface Session {}
 	// interface Stuff {}
 }

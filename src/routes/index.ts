@@ -28,7 +28,7 @@ export async function debug_get(event: RequestEvent): Promise<ReturnType<Request
 	}
 }
 export async function prod_get(event: RequestEvent): Promise<ReturnType<RequestHandler>> {
-	let stories = await HN_KV.get("topstories")
+	let stories = await event.platform.env.HN_KV.get("topstories")
 	return {
 		// @ts-ignore TODO: why is it giving lint error?
 		body: {
