@@ -46,16 +46,19 @@
 <svelte:window on:keydown={handleKeydown} />
 <div class="flex flex-col h-full">
 	<nav class=" flex-grow-0">
-		<button
+		<!-- <button
 			on:click={() => {
 				show_hidden = !show_hidden;
 			}}
 		>
 			toggle hidden
-		</button>
+		</button> -->
+		<label
+			>Show Hidden:
+			<input type="checkbox" bind:checked={show_hidden} />
+		</label>
 		|
-		{stories.length - visible_ids.length} hidden | Showing hidden:{show_hidden}
-		| Focus: {current_focus}
+		{stories.length - visible_ids.length} hidden | Focus: {current_focus}
 	</nav>
 
 	<div bind:this={board} class=" flex-grow overflow-y-scroll border border-green-400">
@@ -78,7 +81,7 @@
 					</a>
 					{#if story.url}
 						<a href={story.url}>
-							<span>  ({get_origin(story.url)})</span>
+							<span> ({get_origin(story.url)})</span>
 						</a>
 					{/if}
 					<br />
