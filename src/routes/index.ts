@@ -28,13 +28,7 @@ export async function debug_get(event: RequestEvent): Promise<ReturnType<Request
 	}
 }
 export async function prod_get(event: RequestEvent): Promise<ReturnType<RequestHandler>> {
-	const r = await fetch(BASE_URL + "/topstories.json");
-	let story_ids: number[] = await r.json();
-	function fetch_story(id: number): Promise<IStory> {
-		return fetch(BASE_URL + "/item/" + id + ".json")
-			.then(r => r.json());
-	}
-	let stories = await Promise.all(story_ids.slice(0, 30).map(fetch_story))
+	let stories = await HN_KV.get("topstories")
 	return {
 		// @ts-ignore TODO: why is it giving lint error?
 		body: {
