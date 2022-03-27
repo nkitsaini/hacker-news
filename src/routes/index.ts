@@ -2,24 +2,10 @@ import { dev } from "$app/env";
 import type { IStory } from "$lib/models";
 import type { RequestHandler } from "@sveltejs/kit";
 import type { RequestEvent } from "@sveltejs/kit/types/internal";
-
-const BASE_URL = "https://hacker-news.firebaseio.com/v0";
+import TEST_HN_HOME from '$lib/sample_hn.json';
 
 export async function debug_get(event: RequestEvent): Promise<ReturnType<RequestHandler>> {
-	let stories: IStory[] = [...Array(30).keys()].map(i => {
-		return {
-			by: "taylor",
-			descendants: 0,
-			id: i,
-			kids: [],
-			score: 0,
-			time: 0,
-			title: "test",
-			type: "story",
-			url: "https://test.test"
-		}
-	});
-
+	let stories = TEST_HN_HOME;
 	return {
 		// @ts-ignore
 		body: {

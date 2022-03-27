@@ -39,17 +39,8 @@
 	}
 	let board: HTMLDivElement;
 	$: {
-		board && console.log(story_divs[visible_ids[current_focus]]?.children);
-		board && story_divs[visible_ids[current_focus]]?.children[0].children[0].focus();
-		// if (current_focus == 0) {
-		// 	board?.scroll({ top: 0 });
-		// 	browser && window.scroll({ top: 0 });
-		// }
+		board && story_divs[visible_ids[current_focus]]?.focus();
 	}
-	// $: (board && (board.children[current_focus] as HTMLDivElement)).focus();
-	// onMount(() => {
-	// 	(board.children[current_focus] as HTMLDivElement).focus();
-	// });
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
@@ -62,34 +53,37 @@
 		>
 			toggle hidden
 		</button>
-		{stories.length - visible_ids.length} hidden Showing hidden:{show_hidden}
-		<br />
-		{current_focus}
+		|
+		{stories.length - visible_ids.length} hidden | Showing hidden:{show_hidden}
+		| Focus: {current_focus}
 	</nav>
 
-	<div bind:this={board} class="pt-[20px] flex-grow overflow-scroll border border-green-400">
+	<div bind:this={board} class=" flex-grow overflow-y-scroll border border-green-400">
 		{#each stories as story, i}
 			<div
 				class:hidden={!show_hidden && hide.includes(story.id)}
-				class="focus:bg-blue-100 focus-within:bg-yellow-100"
+				class="focus:bg-blue-100 focus-within:bg-yellow-100  text-slate-600"
 				bind:this={story_divs[story.id]}
+				tabindex="0"
 				on:keydown={(event) => {
-					event.key == 'h' && toggle_id(story.id);
+					event.key == 's' && toggle_id(story.id);
+					event.key == 'Enter' &&
+						(window.location.href = `https://news.ycombinator.com/item?id=${story.id}`);
+					event.key == 'b' && story.url && (window.location.href = story.url);
 				}}
 			>
-				<div class="border border-blue-200 focus:border-red-200">
+				<div>
 					<a href="https://news.ycombinator.com/item?id={story.id}">
-						<span class="">{i + 1}. {story.title}</span>
+						<span class=" text-slate-800"> {i + 1}. {story.title}</span>
 					</a>
-					|
 					{#if story.url}
 						<a href={story.url}>
-							<span> Blog ({get_origin(story.url)})</span>
+							<span>  ({get_origin(story.url)})</span>
 						</a>
 					{/if}
 					<br />
 				</div>
-				<button class="border-red-100 border" on:click={() => toggle_id(story.id)}>
+				<button class="" on:click={() => toggle_id(story.id)}>
 					{hide.includes(story.id) ? 'show' : 'hide'}
 				</button>
 			</div>
